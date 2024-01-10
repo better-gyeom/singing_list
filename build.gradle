@@ -1,4 +1,4 @@
-plugins {
+plugins { //최신 플러그인 작성방법
 	id 'java'
 	id 'org.springframework.boot' version '3.2.1'
 	id 'io.spring.dependency-management' version '1.1.4'
@@ -17,18 +17,19 @@ configurations {
 	}
 }
 
-repositories {
+repositories { //각종 의존성 (라이브러리)들을 어떤 원격 저장소에서 받을지 정함
 	mavenCentral()
 }
 
-dependencies {
+dependencies { //프로젝트 개발에 필요한 의존성들을 선언하는 곳
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
-tasks.named('test') {
+tasks.named('test') { //Junit5를 사용하기 위한 설정
 	useJUnitPlatform()
 }
