@@ -11,13 +11,7 @@ java {
 	sourceCompatibility = '21'
 }
 
-configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
-}
-
-repositories { //각종 의존성 (라이브러리)들을 어떤 원격 저장소에서 받을지 정함
+repositories {
 	mavenCentral()
 }
 
@@ -25,8 +19,15 @@ dependencies { //프로젝트 개발에 필요한 의존성들을 선언하는 �
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
+	// lombok
+	implementation 'org.projectlombok:lombok'
+	annotationProcessor 'org.project lombok:lombok'
+	testImplementation 'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
+
+	implementation 'com.h2database:h2'
+	implementation "org.mariadb.jdbc:mariadb-java-client"
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
