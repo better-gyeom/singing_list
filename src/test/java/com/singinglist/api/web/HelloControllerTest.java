@@ -8,8 +8,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.hamcrest.Matchers.is;
 
 
 @ExtendWith(SpringExtension.class)
@@ -28,4 +28,18 @@ public class HelloControllerTest {
                 .andExpect(content().string(hello)); //응답 본문의 내용 검증, 즉 리턴하는게 hello가 맞는지
     }
     // File - project structure 에서 버전이 맞아야 한다.
+
+    @Test
+    public void helloDto가_리턴된다() throws Exception {
+        String name = "hello";
+        int amount = 1000;
+
+        mvc.perform(get("/hello/dto")
+                        .param("name", name) //api test할 때 사용될 요청 파라미터 설정, 단 String값만 허용
+                        .param("amount", String.valueOf(amount)) //그래서 int형을 String으로 바꿔준 것
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", is(name))) //JSON 응답값을 필드별로 검증할 수 있는 메서드
+                .andExpect(jsonPath("$.amount", is(amount))); //$를 기준으로 필드명 명시
+    }
 }
