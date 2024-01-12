@@ -31,6 +31,6 @@ dependencies { //프로젝트 개발에 필요한 의존성들을 선언하는 �
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
-tasks.named('test') { //Junit5를 사용하기 위한 설정
+test { //Junit5를 사용하기 위한 설정
 	useJUnitPlatform()
 }
