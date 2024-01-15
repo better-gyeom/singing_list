@@ -1,5 +1,6 @@
 package com.singinglist.api.domain.posts;
 
+import com.singinglist.api.domain.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Getter //클래스 내 모든 필드의 Getter 메소드 자동생성
 @NoArgsConstructor //기본 생성자 자동 추가 (public Posts() {}와 같은 효과)
 @Entity //테이블과 링크될 클래스
-public class Posts {
+public class Posts extends BaseTimeEntity {
     @Id //해당 테이블의 pk
     @GeneratedValue(strategy = GenerationType.IDENTITY) //pk 생성규칙 (여기선 auto_increment)
     private Long id;
@@ -28,5 +29,10 @@ public class Posts {
         this.title = title;
         this.content = content;
         this.author = author;
+    }
+
+    public void update(String title, String content) {
+        this.title = title;
+        this.content = content;
     }
 }
