@@ -2,16 +2,23 @@ package com.singinglist.api.service.posts;
 
 import com.singinglist.api.domain.posts.Posts;
 import com.singinglist.api.domain.posts.PostsRepository;
+import com.singinglist.api.domain.posts.TestRepository;
 import com.singinglist.api.web.dto.PostsResponseDto;
 import com.singinglist.api.web.dto.PostsSaveRequestDto;
 import com.singinglist.api.web.dto.PostsUpdateRequestDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
 public class PostsService {
+    @Autowired
+    private final TestRepository testRepository;
+
     private final PostsRepository postsRepository;
 
     @Transactional
@@ -29,7 +36,7 @@ public class PostsService {
     }
 
     public PostsResponseDto findById(Long id) {
-        Posts entity = postsRepository.findById(id)
+        Posts entity = testRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
 
         return new PostsResponseDto(entity);
