@@ -9,6 +9,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
@@ -18,13 +19,6 @@ public class TestRepositoryTest {
     @Autowired
     TestRepository testRepository;
 
-    @Autowired
-    PostsRepository postsRepository;
-
-    @AfterEach
-    public void cleanup() {
-        postsRepository.deleteAll();
-    }
 
     @Test
     public void post_아이디로_찾기() {
@@ -33,7 +27,7 @@ public class TestRepositoryTest {
         String content = "3.2 메모리";
         String author = "주홍철";
 
-        Posts savedPosts = postsRepository.save(Posts.builder() //save는 안만들었기 때문에 기존 JPA 사용 (나중에 없앨 예정)
+        Posts savedPosts = testRepository.save(Posts.builder() //save는 안만들었기 때문에 기존 JPA 사용 (나중에 없앨 예정)
                 .title(title)
                 .content(content)
                 .author(author).build());
@@ -45,5 +39,24 @@ public class TestRepositoryTest {
 
         //then
         assertThat(post.getTitle()).isEqualTo(title);
+    }
+
+    @Test
+    public void save_test() {
+        //given
+        String title = "짜증나";
+        String content = "명선이는 나빠";
+        String author = "유다윤";
+
+        Posts savePosts = testRepository.save(Posts.builder()
+                .title(title)
+                .content(content)
+                .author(author)
+                .build());
+
+        //when
+        assertThat(savePosts.getTitle()).isEqualTo(title);
+
+        //then
     }
 }
