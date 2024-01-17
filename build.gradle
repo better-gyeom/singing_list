@@ -25,10 +25,13 @@ dependencies { //프로젝트 개발에 필요한 의존성들을 선언하는 �
 	testImplementation 'org.projectlombok:lombok'
 	testAnnotationProcessor 'org.projectlombok:lombok'
 
+
 	implementation 'com.h2database:h2'
 	implementation "org.mariadb.jdbc:mariadb-java-client"
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+	runtimeOnly 'com.h2database:h2'
 }
 
 test { //Junit5를 사용하기 위한 설정

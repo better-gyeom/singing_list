@@ -18,11 +18,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class PostsRepositoryTest {
 
     @Autowired
-    PostsRepository postsRepository;
+    TestRepository testRepository;
 
     @AfterEach //test 실행되고 난 후
     public void cleanup() {
-        postsRepository.deleteAll();
+        testRepository.deleteAll();
     }
 
     @Test
@@ -32,10 +32,10 @@ public class PostsRepositoryTest {
         String content = "테스트 본문";
 
         //데이블 posts에 insert/update 쿼리 실행
-        postsRepository.save(Posts.builder().title(title).content(content).author("jojoldu@gmail.com").build());
+        testRepository.save(Posts.builder().title(title).content(content).author("jojoldu@gmail.com").build());
 
         //when
-        List<Posts> postsList = postsRepository.findAll(); //모든 데이터를 조회해오는 메소드
+        List<Posts> postsList = testRepository.findAll(); //모든 데이터를 조회해오는 메소드
 
         //then
         Posts posts = postsList.get(0);
@@ -46,14 +46,14 @@ public class PostsRepositoryTest {
     @Test
     public void BaseTimeEntity_등록() {
         //given
-        LocalDateTime now = LocalDateTime.of(2023,1,15,0,0,0);
-        postsRepository.save(Posts.builder().title("title").content("content").author("author").build());
+        LocalDateTime now = LocalDateTime.of(2023, 1, 15, 0, 0, 0);
+        testRepository.save(Posts.builder().title("title").content("content").author("author").build());
         //when
-        List<Posts> postsList = postsRepository.findAll();
+        List<Posts> postsList = testRepository.findAll();
         //then
         Posts posts = postsList.get(0);
 
-        System.out.println(">>>>>>>>>> CreateDate=" + posts.getCreatedDate() + ", modifiedDate=" + posts.getModifiedDate());
+        System.out.println(">>>>>>>>>> createDate=" + posts.getCreatedDate() + ", modifiedDate=" + posts.getModifiedDate());
 
         assertThat(posts.getCreatedDate()).isAfter(now);
         assertThat(posts.getModifiedDate()).isAfter(now);
