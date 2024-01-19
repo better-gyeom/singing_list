@@ -1,11 +1,13 @@
 package com.singinglist.api.domain.posts;
 
+import org.aspectj.lang.annotation.After;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +20,11 @@ public class TestRepositoryTest {
 
     @Autowired
     TestRepository testRepository;
+
+    @AfterEach
+    public void tearDown() throws Exception {
+        testRepository.deleteAll();
+    }
 
 
     @Test
