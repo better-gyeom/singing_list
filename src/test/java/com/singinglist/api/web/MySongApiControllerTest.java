@@ -1,9 +1,9 @@
 package com.singinglist.api.web;
 
-import com.singinglist.api.domain.posts.Posts;
-import com.singinglist.api.domain.posts.TestRepository;
-import com.singinglist.api.web.dto.PostsSaveRequestDto;
-import com.singinglist.api.web.dto.PostsUpdateRequestDto;
+import com.singinglist.api.domain.posts.MySong;
+import com.singinglist.api.domain.posts.MySongRepository;
+import com.singinglist.api.web.dto.MySongSaveRequestDto;
+import com.singinglist.api.web.dto.MySongUpdateRequestDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class PostsApiControllerTest {
+class MySongApiControllerTest {
     @LocalServerPort
     private int port;
 
@@ -31,11 +31,11 @@ class PostsApiControllerTest {
     private TestRestTemplate restTemplate;
 
     @Autowired
-    private TestRepository testRepository;
+    private MySongRepository mySongRepository;
 
     @AfterEach
     public void tearDown() throws Exception {
-        testRepository.deleteAll();
+        mySongRepository.deleteAll();
     }
 
     @Test
@@ -44,7 +44,7 @@ class PostsApiControllerTest {
         String title = "title";
         String content = "content";
 
-        PostsSaveRequestDto requestDto = PostsSaveRequestDto.builder().
+        MySongSaveRequestDto requestDto = MySongSaveRequestDto.builder().
                 title(title).content(content).author("author").build();
 
         String url = "http://localhost:" + port + "/api/v1/posts";
@@ -55,7 +55,7 @@ class PostsApiControllerTest {
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody()).isGreaterThan(0L);
 
-        List<Posts> all = testRepository.findAll();
+        List<MySong> all = mySongRepository.findAll();
         assertThat(all.get(0).getTitle()).isEqualTo(title);
         assertThat(all.get(0).getContent()).isEqualTo(content);
 
@@ -65,23 +65,23 @@ class PostsApiControllerTest {
     @Test
     public void Posts_수정된다() throws Exception {
         //given
-        Posts savedPosts = testRepository.save(Posts.builder()
+        MySong savedMySong = mySongRepository.save(MySong.builder()
                 .title("title2")
                 .content("content2")
                 .author("author")
                 .build());
 
-        Long updateId = savedPosts.getId();
+        Long updateId = savedMySong.getId();
         String expectedTitle = "title2";
         String expectedContent = "content2";
 
-        PostsUpdateRequestDto requestDto = PostsUpdateRequestDto.builder()
+        MySongUpdateRequestDto requestDto = MySongUpdateRequestDto.builder()
                 .title(expectedTitle)
                 .content(expectedContent)
                 .build();
 
         String url = "http://localhost:" + port + "/api/v1/posts/" + updateId;
-        HttpEntity<PostsUpdateRequestDto> requestEntity = new HttpEntity<>(requestDto);
+        HttpEntity<MySongUpdateRequestDto> requestEntity = new HttpEntity<>(requestDto);
 
         //when
         ResponseEntity<Long> responseEntity = restTemplate.exchange(url, HttpMethod.PUT, requestEntity, Long.class);
@@ -90,7 +90,7 @@ class PostsApiControllerTest {
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody()).isGreaterThan(0L);
 
-        List<Posts> all = testRepository.findAll();
+        List<MySong> all = mySongRepository.findAll();
         assertThat(all.get(0).getTitle()).isEqualTo(expectedTitle);
         assertThat(all.get(0).getContent()).isEqualTo(expectedContent);
     }

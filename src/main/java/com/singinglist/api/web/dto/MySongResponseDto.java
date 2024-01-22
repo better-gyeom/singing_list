@@ -1,16 +1,16 @@
 package com.singinglist.api.web.dto;
 
-import com.singinglist.api.domain.posts.Posts;
+import com.singinglist.api.domain.posts.MySong;
 import lombok.Getter;
 
 @Getter
-public class PostsResponseDto {
+public class MySongResponseDto {
     private Long id;
     private String title;
     private String content;
     private String author;
 
-    public PostsResponseDto(Posts entity) {
+    public MySongResponseDto(MySong entity) {
         this.id = entity.getId();
         this.title = entity.getTitle();
         this.content = entity.getContent();
