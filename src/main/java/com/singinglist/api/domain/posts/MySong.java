@@ -13,23 +13,16 @@ import lombok.Setter;
 public class MySong extends BaseTimeEntity {
 
     private Long id;
-
-    private String title;
-
-    private String content;
-
-    private String author;
+    private String title; //노래 제목
+    private String genre; //노래 장르
+    private String author; //노래 가수
 
     @Builder //해당 클래스의 빌더 패턴 클래스를 생성
     //생성자 상단에 선언 시 생성자에 포함된 필드만 빌더에 포함
-    public MySong(String title, String content, String author) {
+    public MySong(String title, String genre, String author) {
         this.title = title;
-        this.content = content;
+        this.genre = genre;
         this.author = author;
     }
 
-    public void update(String title, String content) {
-        this.title = title;
-        this.content = content;
-    }
 }

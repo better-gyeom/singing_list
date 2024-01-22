@@ -26,13 +26,14 @@ public class MySongRepositoryTest {
     }
 
     @Test
-    public void 게시글저장_불러오기() {
+    public void save_test() {
         //given
-        String title = "테스트 게시글";
-        String content = "테스트 본문";
+        String title = "fire";
+        String genre = "댄스";
+        String author = "2ne1";
 
         //데이블 posts에 insert/update 쿼리 실행
-        mySongRepository.save(MySong.builder().title(title).content(content).author("jojoldu@gmail.com").build());
+        mySongRepository.save(MySong.builder().title(title).genre(genre).author(author).build());
 
         //when
         List<MySong> mySongList = mySongRepository.findAll(); //모든 데이터를 조회해오는 메소드
@@ -40,14 +41,14 @@ public class MySongRepositoryTest {
         //then
         MySong mySong = mySongList.get(0);
         assertThat(mySong.getTitle()).isEqualTo(title);
-        assertThat(mySong.getContent()).isEqualTo(content);
+        assertThat(mySong.getGenre()).isEqualTo(genre);
     }
 
     @Test
     public void BaseTimeEntity_등록() {
         //given
         LocalDateTime now = LocalDateTime.of(2023, 1, 15, 0, 0, 0);
-        mySongRepository.save(MySong.builder().title("title").content("content").author("author").build());
+        mySongRepository.save(MySong.builder().title("title").genre("genre").author("author").build());
         //when
         List<MySong> mySongList = mySongRepository.findAll();
         //then

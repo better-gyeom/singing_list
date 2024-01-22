@@ -25,7 +25,7 @@ public class MySongRepository {
             MySong mySong = new MySong();
             mySong.setId(rs.getLong("id"));
             mySong.setTitle(rs.getString("title"));
-            mySong.setContent(rs.getString("content"));
+            mySong.setGenre(rs.getString("genre"));
             mySong.setAuthor(rs.getString("author"));
             mySong.setCreatedDate(new Timestamp(rs.getDate("created_date").getTime()).toLocalDateTime());
             mySong.setModifiedDate(new Timestamp(rs.getDate("modified_date").getTime()).toLocalDateTime());
@@ -37,12 +37,12 @@ public class MySongRepository {
         Optional<MySong> post = findById(mySong.getId()); //id를 가진 post select
         if (post.isPresent()) { //값이 존재하면
             //수정
-            jdbcTemplate.update("update posts set title = ?, content = ?, author = ?, modified_date = ? where id = ?",
-                    mySong.getTitle(), mySong.getContent(), mySong.getAuthor(), LocalDateTime.now(), mySong.getId());
+            jdbcTemplate.update("update my_song set title = ?, genre = ?, author = ?, modified_date = ? where id = ?",
+                    mySong.getTitle(), mySong.getGenre(), mySong.getAuthor(), LocalDateTime.now(), mySong.getId());
         } else { //값이 없으면
             //삽입
-            jdbcTemplate.update("insert into posts (title, content, author, created_date, modified_date) values (?, ?, ?, ?, ?)",
-                    mySong.getTitle(), mySong.getContent(), mySong.getAuthor(), LocalDateTime.now(), LocalDateTime.now());
+            jdbcTemplate.update("insert into my_song (title, genre, author, created_date, modified_date) values (?, ?, ?, ?, ?)",
+                    mySong.getTitle(), mySong.getGenre(), mySong.getAuthor(), LocalDateTime.now(), LocalDateTime.now());
         }
         MySong res = findTitleByAuthor(mySong.getTitle(), mySong.getAuthor()).orElseThrow();
         return res;
@@ -54,7 +54,7 @@ public class MySongRepository {
 //        map.forEach((k,v) -> System.out.println(k + ":" + v));
 //        System.out.println("===========================");
 
-        List<MySong> result = jdbcTemplate.query("select * from posts where id = ?", postsRowMapper(), id);
+        List<MySong> result = jdbcTemplate.query("select * from my_song where id = ?", postsRowMapper(), id);
         //query를 날릴 때 postsRowMapper가 반환값을 posts객체로 변환시킴
         //여러개를 모두 변환시키기 때문에 List가 된다.
 
@@ -62,19 +62,19 @@ public class MySongRepository {
     }
 
     public Optional<MySong> findTitleByAuthor(String title, String author) {
-        List<MySong> song = jdbcTemplate.query("select * from posts where author = ? and title = ?", postsRowMapper(), author, title);
+        List<MySong> song = jdbcTemplate.query("select * from my_song where author = ? and title = ?", postsRowMapper(), author, title);
         return song.stream().findAny();
     }
 
 
     public List<MySong> findAll() {
         List<MySong> mySongList = jdbcTemplate.query(
-                "select * from posts",
+                "select * from my_song",
                 postsRowMapper());
         return mySongList;
     }
 
     public void deleteAll() {
-        jdbcTemplate.update("delete from posts");
+        jdbcTemplate.update("delete from my_song");
     }
 }

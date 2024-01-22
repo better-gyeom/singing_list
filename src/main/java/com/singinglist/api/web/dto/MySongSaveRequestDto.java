@@ -9,17 +9,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MySongSaveRequestDto {
     private String title;
-    private String content;
+    private String genre;
     private String author;
 
     @Builder
-    public MySongSaveRequestDto(String title, String content, String author) {
+    public MySongSaveRequestDto(String title, String genre, String author) {
         this.title = title;
-        this.content = content;
+        this.genre = genre;
         this.author = author;
     }
 
     public MySong toEntity() {
-        return MySong.builder().title(title).content(content).author(author).build();
+        return MySong.builder().title(title).genre(genre).author(author).build();
     }
 }

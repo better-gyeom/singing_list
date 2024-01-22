@@ -11,9 +11,6 @@ import java.time.LocalDateTime;
 @Setter
 public class BaseTimeEntity {
 
-
     private LocalDateTime createdDate;
-
-
     private LocalDateTime modifiedDate;
 }
