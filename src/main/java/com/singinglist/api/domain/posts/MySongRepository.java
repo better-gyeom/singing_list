@@ -33,7 +33,7 @@ public class MySongRepository {
         };
     }
 
-    //나의 노래리스트로 저장
+
     public MySong save(MySong mySong) {
         Optional<MySong> song = findById(mySong.getId()); //id를 가진 song select
         if (song.isPresent()) { //값이 존재하면
@@ -42,12 +42,17 @@ public class MySongRepository {
                     mySong.getTitle(), mySong.getGenre(), mySong.getAuthor(), LocalDateTime.now(), mySong.getId());
         } else { //값이 없으면
             //삽입
-            jdbcTemplate.update("insert into my_song (title, genre, author, created_date, modified_date)" +
-                            " values (?, ?, ?, ?, ?)",
-                    mySong.getTitle(), mySong.getGenre(), mySong.getAuthor(), LocalDateTime.now(), LocalDateTime.now());
+            insertSong(mySong);
         }
-        MySong res = findTitleByAuthor(mySong.getTitle(), mySong.getAuthor()).orElseThrow();
+        MySong res = findTitleAndAuthor(mySong.getTitle(), mySong.getAuthor()).orElseThrow();
         return res;
+    }
+
+    //나의 노래리스트로 저장
+    public void insertSong(MySong mySong) {
+        jdbcTemplate.update("insert into my_song (title, genre, author, created_date, modified_date)" +
+                        " values (?, ?, ?, ?, ?)",
+                mySong.getTitle(), mySong.getGenre(), mySong.getAuthor(), LocalDateTime.now(), LocalDateTime.now());
     }
 
     public Optional<MySong> findById(Long id) { //기존 JPA의 findById를 변경
@@ -63,7 +68,7 @@ public class MySongRepository {
         return result.stream().findAny(); //List 형태의 result를 Optional 형태로 변환하여 반환
     }
 
-    public Optional<MySong> findTitleByAuthor(String title, String author) {
+    public Optional<MySong> findTitleAndAuthor(String title, String author) {
         List<MySong> song = jdbcTemplate.query("select * from my_song where author = ? and title = ?", postsRowMapper(), author, title);
         return song.stream().findAny();
     }

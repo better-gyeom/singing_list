@@ -4,8 +4,10 @@ import com.singinglist.api.domain.posts.MySong;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class MySongSaveRequestDto {
     private String title;

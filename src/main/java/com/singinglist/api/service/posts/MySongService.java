@@ -15,8 +15,8 @@ public class MySongService {
     private final MySongRepository mySongRepository;
 
     //나의 노래리스트로 저장
-    public Long save(MySongSaveRequestDto requestDto) {
-        return mySongRepository.save(requestDto.toEntity()).getId();
+    public void insert(MySongSaveRequestDto requestDto) {
+        mySongRepository.insertSong(requestDto.toEntity());
     }
 
     //나의 노래리스트 조회
