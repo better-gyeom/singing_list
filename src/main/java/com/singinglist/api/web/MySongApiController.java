@@ -11,9 +11,10 @@ import org.springframework.web.bind.annotation.*;
 public class MySongApiController {
     private final MySongService mySongService;
 
-    @PostMapping("/api/v1/posts") //등록기능
-    public Long save(@RequestBody MySongSaveRequestDto requestDto) {
-        return mySongService.save(requestDto);
+    //나의 노래리스트에 노래 등록하기
+    @PostMapping("/api/mysong-list")
+    public void save(@RequestBody MySongSaveRequestDto requestDto) {
+        mySongService.insert(requestDto);
     }
 
 //    @PutMapping("/api/v1/posts/{id}") //수정기능
