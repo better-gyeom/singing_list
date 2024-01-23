@@ -33,15 +33,17 @@ public class MySongRepository {
         };
     }
 
+    //나의 노래리스트로 저장
     public MySong save(MySong mySong) {
-        Optional<MySong> post = findById(mySong.getId()); //id를 가진 post select
-        if (post.isPresent()) { //값이 존재하면
+        Optional<MySong> song = findById(mySong.getId()); //id를 가진 song select
+        if (song.isPresent()) { //값이 존재하면
             //수정
             jdbcTemplate.update("update my_song set title = ?, genre = ?, author = ?, modified_date = ? where id = ?",
                     mySong.getTitle(), mySong.getGenre(), mySong.getAuthor(), LocalDateTime.now(), mySong.getId());
         } else { //값이 없으면
             //삽입
-            jdbcTemplate.update("insert into my_song (title, genre, author, created_date, modified_date) values (?, ?, ?, ?, ?)",
+            jdbcTemplate.update("insert into my_song (title, genre, author, created_date, modified_date)" +
+                            " values (?, ?, ?, ?, ?)",
                     mySong.getTitle(), mySong.getGenre(), mySong.getAuthor(), LocalDateTime.now(), LocalDateTime.now());
         }
         MySong res = findTitleByAuthor(mySong.getTitle(), mySong.getAuthor()).orElseThrow();
@@ -67,6 +69,7 @@ public class MySongRepository {
     }
 
 
+    //나의 노래리스트 조회
     public List<MySong> findAll() {
         List<MySong> mySongList = jdbcTemplate.query(
                 "select * from my_song",
