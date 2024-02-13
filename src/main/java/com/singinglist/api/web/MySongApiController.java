@@ -1,10 +1,13 @@
 package com.singinglist.api.web;
 
+import com.singinglist.api.domain.posts.MySong;
 import com.singinglist.api.service.posts.MySongService;
+import com.singinglist.api.web.dto.MySongInsertRequestDto;
 import com.singinglist.api.web.dto.MySongResponseDto;
-import com.singinglist.api.web.dto.MySongSaveRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -13,17 +16,20 @@ public class MySongApiController {
 
     //나의 노래리스트에 노래 등록하기
     @PostMapping("/api/mysong-list")
-    public void save(@RequestBody MySongSaveRequestDto requestDto) {
+    public void insert(@RequestBody MySongInsertRequestDto requestDto) {
         mySongService.insert(requestDto);
     }
 
-//    @PutMapping("/api/v1/posts/{id}") //수정기능
-//    public Long update(@PathVariable Long id, @RequestBody MySongUpdateRequestDto requestDto) {
-//        return mySongService.update(id, requestDto);
-//    }
+    //나의 노래리스트 조회
+    @GetMapping("/api/mysong-list") //전체 조회기능
+    public List<MySongResponseDto> findAll() {
+        return mySongService.findAll();
+    }
 
-    @GetMapping("/api/v1/posts/{id}") //조회기능
-    public MySongResponseDto findById(@PathVariable Long id) {
-        return mySongService.findById(id);
+
+    @GetMapping("/api/mysong-list/{title}") //단건 조회기능
+    public List<MySongResponseDto> findByTitle(@PathVariable String title) {
+        return mySongService.findByTitle(title);
+
     }
 }

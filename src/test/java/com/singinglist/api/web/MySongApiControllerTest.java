@@ -3,7 +3,8 @@ package com.singinglist.api.web;
 import com.singinglist.api.domain.posts.MySong;
 import com.singinglist.api.domain.posts.MySongRepository;
 import com.singinglist.api.service.posts.MySongService;
-import com.singinglist.api.web.dto.MySongSaveRequestDto;
+import com.singinglist.api.web.dto.MySongInsertRequestDto;
+import com.singinglist.api.web.dto.MySongResponseDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,14 +12,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
+import org.springframework.cglib.core.Local;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -43,29 +46,56 @@ class MySongApiControllerTest {
     }
 
     @Test
-    public void Posts_등록된다() throws Exception {
+    public void 나의_노래리스트에_등록된다() throws Exception {
         //given
         String title = "Love 119";
         String genre = "k-pop";
         String author = "라이즈";
+        LocalDateTime releaseDate = LocalDateTime.of(2023, Month.NOVEMBER, 10, 0, 0);
 
-        MySongSaveRequestDto requestDto = MySongSaveRequestDto.builder().
-                title(title).genre(genre).author(author).build();
-
+        MySongInsertRequestDto requestDto = MySongInsertRequestDto.builder().
+                title(title).genre(genre).author(author).releaseDate(releaseDate).build();
 
         String url = "http://localhost:" + port + "/api/mysong-list";
 
         //when
-        ResponseEntity<Long> responseEntity = restTemplate.postForEntity(url, requestDto, Long.class);
+        ResponseEntity<Void> responseEntity = restTemplate.postForEntity(url, requestDto, null);
         //then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        MySong mySong = mySongRepository.findTitleAndAuthor(title, author).orElseThrow();
-        assertThat(mySong.getTitle()).isEqualTo(title);
-        assertThat(mySong.getGenre()).isEqualTo(genre);
-        assertThat(mySong.getAuthor()).isEqualTo(author);
+        List<MySong> mySong = mySongRepository.findByTitle(title);
+        MySong oneSong = mySong.get(0);
+        assertThat(oneSong.getTitle()).isEqualTo(title);
+        assertThat(oneSong.getGenre()).isEqualTo(genre);
+        assertThat(oneSong.getAuthor()).isEqualTo(author);
 
+    }
 
+    @Test
+    public void 나의_노래리스트_전체조회() throws Exception {
+        //given
+        String title = "Love 119";
+        String genre = "k-pop";
+        String author = "라이즈";
+        LocalDateTime releaseDate = LocalDateTime.of(2023, Month.NOVEMBER, 10, 0, 0);
+
+        MySong mySong = new MySong(title, genre, author, releaseDate);
+        mySongRepository.insertSong(mySong);
+
+        String url = "http://localhost:" + port + "/api/mysong-list";
+
+        //when
+        ResponseEntity<MySongResponseDto[]> responseEntity = restTemplate.getForEntity(url, MySongResponseDto[].class);
+        System.out.println(responseEntity.getBody());
+        List<MySongResponseDto> mySongList = Arrays.asList(responseEntity.getBody());
+
+        //then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        MySongResponseDto oneSong = mySongList.get(0);
+        assertThat(oneSong.getTitle()).isEqualTo(title);
+        assertThat(oneSong.getGenre()).isEqualTo(genre);
+        assertThat(oneSong.getAuthor()).isEqualTo(author);
     }
 
 //    @Test

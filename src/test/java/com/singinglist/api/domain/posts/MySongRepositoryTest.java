@@ -33,7 +33,7 @@ public class MySongRepositoryTest {
         String author = "2ne1";
 
         //데이블 posts에 insert/update 쿼리 실행
-        mySongRepository.save(MySong.builder().title(title).genre(genre).author(author).build());
+        mySongRepository.insertSong(MySong.builder().title(title).genre(genre).author(author).build());
 
         //when
         List<MySong> mySongList = mySongRepository.findAll(); //모든 데이터를 조회해오는 메소드
@@ -48,7 +48,7 @@ public class MySongRepositoryTest {
     public void BaseTimeEntity_등록() {
         //given
         LocalDateTime now = LocalDateTime.of(2023, 1, 15, 0, 0, 0);
-        mySongRepository.save(MySong.builder().title("title").genre("genre").author("author").build());
+        mySongRepository.insertSong(MySong.builder().title("title").genre("genre").author("author").build());
         //when
         List<MySong> mySongList = mySongRepository.findAll();
         //then

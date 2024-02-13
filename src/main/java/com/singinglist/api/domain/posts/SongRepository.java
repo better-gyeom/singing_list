@@ -33,7 +33,7 @@ public class SongRepository {
         };
     }
 
-    //노래 검색
+    //제목으로 노래 검색
     public Optional<Song> findSongByTitle(String title) {
         List<Song> song = jdbcTemplate.query("select * from song where title = ?", postsRowMapper(), title);
         return song.stream().findAny();
