@@ -53,37 +53,48 @@ class MySongServiceTest {
     }
 
     @Test
-    public void 나의_노래리스트_조회() {
+    public void 나의_노래리스트_전체조회() {
         //given
         String title = "Love 119";
         String genre = "k-pop";
         String author = "라이즈";
-
-        MySongInsertRequestDto mySongInsertRequestDto = new MySongInsertRequestDto();
-        mySongInsertRequestDto.setTitle(title);
-        mySongInsertRequestDto.setGenre(genre);
-        mySongInsertRequestDto.setAuthor(author);
-
-        mySongService.insert(mySongInsertRequestDto);
+        mySongRepository.insertSong(MySong.builder().title(title).genre(genre).author(author).build());
 
         String title2 = "drama";
         String genre2 = "k-pop";
         String author2 = "에스파";
-
-        MySongInsertRequestDto mySongInsertRequestDto2 = new MySongInsertRequestDto();
-        mySongInsertRequestDto2.setTitle(title2);
-        mySongInsertRequestDto2.setGenre(genre2);
-        mySongInsertRequestDto2.setAuthor(author2);
-
-        mySongService.insert(mySongInsertRequestDto2);
+        mySongRepository.insertSong(MySong.builder().title(title2).genre(genre2).author(author2).build());
 
         //when
         List<MySongResponseDto> all = mySongService.findAll();
 
         //then
-//        MySong mySong = all.get(1);
-//        assertThat(mySong.getTitle()).isEqualTo(title2);
-//        assertThat(mySong.getAuthor()).isEqualTo(author2);
+        MySongResponseDto mySong = all.get(1);
+        assertThat(mySong.getTitle()).isEqualTo(title2);
+        assertThat(mySong.getAuthor()).isEqualTo(author2);
     }
+
+    @Test
+    public void 나의_노래리스트_제목으로_단건조회() {
+        //given
+        String title = "Love 119";
+        String genre = "k-pop";
+        String author = "라이즈";
+        mySongRepository.insertSong(MySong.builder().title(title).genre(genre).author(author).build());
+
+        String title2 = "drama";
+        String genre2 = "k-pop";
+        String author2 = "에스파";
+        mySongRepository.insertSong(MySong.builder().title(title2).genre(genre2).author(author2).build());
+
+        //when
+        List<MySongResponseDto> findSong = mySongService.findByTitle(title);
+        MySongResponseDto oneSong = findSong.get(0);
+
+        //then
+        assertThat(oneSong.getTitle()).isEqualTo(title);
+        assertThat(oneSong.getAuthor()).isEqualTo(author);
+    }
+
 
 }

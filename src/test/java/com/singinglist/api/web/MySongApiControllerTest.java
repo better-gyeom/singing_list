@@ -5,6 +5,7 @@ import com.singinglist.api.domain.posts.MySongRepository;
 import com.singinglist.api.service.posts.MySongService;
 import com.singinglist.api.web.dto.MySongInsertRequestDto;
 import com.singinglist.api.web.dto.MySongResponseDto;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +17,8 @@ import org.springframework.cglib.core.Local;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -27,6 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Slf4j
 class MySongApiControllerTest {
     @LocalServerPort
     private int port;
@@ -98,38 +102,34 @@ class MySongApiControllerTest {
         assertThat(oneSong.getAuthor()).isEqualTo(author);
     }
 
-//    @Test
-//    public void Posts_수정된다() throws Exception {
-//        //given
-//        MySong savedMySong = mySongRepository.save(MySong.builder()
-//                .title("title2")
-//                .genre("genre")
-//                .author("author")
-//                .build());
-//
-//        Long updateId = savedMySong.getId();
-//        String expectedTitle = "title2";
-//        String expectedContent = "content2";
-//
-//        MySongUpdateRequestDto requestDto = MySongUpdateRequestDto.builder()
-//                .title(expectedTitle)
-//                .content(expectedContent)
-//                .build();
-//
-//        String url = "http://localhost:" + port + "/api/v1/posts/" + updateId;
-//        HttpEntity<MySongUpdateRequestDto> requestEntity = new HttpEntity<>(requestDto);
-//
-//        //when
-//        ResponseEntity<Long> responseEntity = restTemplate.exchange(url, HttpMethod.PUT, requestEntity, Long.class);
-//
-//        //then
-//        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-//        assertThat(responseEntity.getBody()).isGreaterThan(0L);
-//
-//        List<MySong> all = mySongRepository.findAll();
-//        assertThat(all.get(0).getTitle()).isEqualTo(expectedTitle);
-//        assertThat(all.get(0).getGenre()).isEqualTo(expectedContent);
-//    }
+    @Test
+    public void 나의_노래리스트_제목으로_단건조회() throws Exception {
+        //given
+        String title = "Love 119";
+        String genre = "k-pop";
+        String author = "라이즈";
+        mySongRepository.insertSong(MySong.builder().title(title).genre(genre).author(author).build());
+
+        String title2 = "drama";
+        String genre2 = "k-pop";
+        String author2 = "에스파";
+        mySongRepository.insertSong(MySong.builder().title(title2).genre(genre2).author(author2).build());
+
+        String url = "http://localhost:" + port + "/api/mysong-list/" + title2;
+        //when
+
+        ResponseEntity<MySongResponseDto[]> responseEntity = restTemplate.getForEntity(url, MySongResponseDto[].class);
+        MySongResponseDto[] mySongList = responseEntity.getBody();
+        System.out.println(mySongList.length);
+
+        //then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        assertThat(mySongList[0].getTitle()).isEqualTo(title2);
+        assertThat(mySongList[0].getGenre()).isEqualTo(genre2);
+        assertThat(mySongList[0].getAuthor()).isEqualTo(author2);
+
+    }
 
 
 }
