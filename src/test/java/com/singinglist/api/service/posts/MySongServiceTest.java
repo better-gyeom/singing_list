@@ -2,7 +2,8 @@ package com.singinglist.api.service.posts;
 
 import com.singinglist.api.domain.posts.MySong;
 import com.singinglist.api.domain.posts.MySongRepository;
-import com.singinglist.api.web.dto.MySongSaveRequestDto;
+import com.singinglist.api.web.dto.MySongInsertRequestDto;
+import com.singinglist.api.web.dto.MySongResponseDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,13 +37,13 @@ class MySongServiceTest {
         String genre = "k-pop";
         String author = "라이즈";
 
-        MySongSaveRequestDto mySongSaveRequestDto = new MySongSaveRequestDto();
-        mySongSaveRequestDto.setTitle(title);
-        mySongSaveRequestDto.setGenre(genre);
-        mySongSaveRequestDto.setAuthor(author);
+        MySongInsertRequestDto mySongInsertRequestDto = new MySongInsertRequestDto();
+        mySongInsertRequestDto.setTitle(title);
+        mySongInsertRequestDto.setGenre(genre);
+        mySongInsertRequestDto.setAuthor(author);
 
         //when
-        mySongService.insert(mySongSaveRequestDto);
+        mySongService.insert(mySongInsertRequestDto);
         List<MySong> mySongList = mySongRepository.findAll(); //모든 데이터를 조회해오는 메소드
 
         //then
@@ -50,4 +51,50 @@ class MySongServiceTest {
         assertThat(mySong.getTitle()).isEqualTo(title);
         assertThat(mySong.getGenre()).isEqualTo(genre);
     }
+
+    @Test
+    public void 나의_노래리스트_전체조회() {
+        //given
+        String title = "Love 119";
+        String genre = "k-pop";
+        String author = "라이즈";
+        mySongRepository.insertSong(MySong.builder().title(title).genre(genre).author(author).build());
+
+        String title2 = "drama";
+        String genre2 = "k-pop";
+        String author2 = "에스파";
+        mySongRepository.insertSong(MySong.builder().title(title2).genre(genre2).author(author2).build());
+
+        //when
+        List<MySongResponseDto> all = mySongService.findAll();
+
+        //then
+        MySongResponseDto mySong = all.get(1);
+        assertThat(mySong.getTitle()).isEqualTo(title2);
+        assertThat(mySong.getAuthor()).isEqualTo(author2);
+    }
+
+    @Test
+    public void 나의_노래리스트_제목으로_단건조회() {
+        //given
+        String title = "Love 119";
+        String genre = "k-pop";
+        String author = "라이즈";
+        mySongRepository.insertSong(MySong.builder().title(title).genre(genre).author(author).build());
+
+        String title2 = "drama";
+        String genre2 = "k-pop";
+        String author2 = "에스파";
+        mySongRepository.insertSong(MySong.builder().title(title2).genre(genre2).author(author2).build());
+
+        //when
+        List<MySongResponseDto> findSong = mySongService.findByTitle(title);
+        MySongResponseDto oneSong = findSong.get(0);
+
+        //then
+        assertThat(oneSong.getTitle()).isEqualTo(title);
+        assertThat(oneSong.getAuthor()).isEqualTo(author);
+    }
+
+
 }

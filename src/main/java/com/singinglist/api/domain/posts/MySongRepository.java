@@ -33,27 +33,29 @@ public class MySongRepository {
         };
     }
 
-
-    public MySong save(MySong mySong) {
-        Optional<MySong> song = findById(mySong.getId()); //id를 가진 song select
-        if (song.isPresent()) { //값이 존재하면
-            //수정
-            jdbcTemplate.update("update my_song set title = ?, genre = ?, author = ?, modified_date = ? where id = ?",
-                    mySong.getTitle(), mySong.getGenre(), mySong.getAuthor(), LocalDateTime.now(), mySong.getId());
-        } else { //값이 없으면
-            //삽입
-            insertSong(mySong);
-        }
-        MySong res = findTitleAndAuthor(mySong.getTitle(), mySong.getAuthor()).orElseThrow();
-        return res;
-    }
-
     //나의 노래리스트로 저장
     public void insertSong(MySong mySong) {
-        jdbcTemplate.update("insert into my_song (title, genre, author, created_date, modified_date)" +
-                        " values (?, ?, ?, ?, ?)",
-                mySong.getTitle(), mySong.getGenre(), mySong.getAuthor(), LocalDateTime.now(), LocalDateTime.now());
+        jdbcTemplate.update("insert into my_song (title, genre, author, release_date, created_date, modified_date)" +
+                        " values (?, ?, ?, ?, ?, ?)",
+                mySong.getTitle(), mySong.getGenre(), mySong.getAuthor(), mySong.getReleaseDate(), LocalDateTime.now(), LocalDateTime.now());
     }
+
+    //나의 노래리스트 조회
+    public List<MySong> findAll() {
+        List<MySong> mySongList = jdbcTemplate.query(
+                "select * from my_song",
+                postsRowMapper());
+        return mySongList;
+    }
+
+    //나의 노래리스트 제목으로 단건 조회
+    public List<MySong> findByTitle(String title) {
+        List<MySong> mySong = jdbcTemplate.query("select * from my_song where title = ?",
+                postsRowMapper(), title);
+
+        return mySong;
+    }
+
 
     public Optional<MySong> findById(Long id) { //기존 JPA의 findById를 변경
 //        System.out.println("===========================");
@@ -68,19 +70,6 @@ public class MySongRepository {
         return result.stream().findAny(); //List 형태의 result를 Optional 형태로 변환하여 반환
     }
 
-    public Optional<MySong> findTitleAndAuthor(String title, String author) {
-        List<MySong> song = jdbcTemplate.query("select * from my_song where author = ? and title = ?", postsRowMapper(), author, title);
-        return song.stream().findAny();
-    }
-
-
-    //나의 노래리스트 조회
-    public List<MySong> findAll() {
-        List<MySong> mySongList = jdbcTemplate.query(
-                "select * from my_song",
-                postsRowMapper());
-        return mySongList;
-    }
 
     public void deleteAll() {
         jdbcTemplate.update("delete from my_song");
