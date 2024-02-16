@@ -30,6 +30,11 @@ public class MySongApiController {
     @GetMapping("/api/mysong-list/{title}") //단건 조회기능
     public List<MySongResponseDto> findByTitle(@PathVariable String title) {
         return mySongService.findByTitle(title);
-
     }
+
+    @DeleteMapping("/api/mysong-list/delete/{id}")
+    public void deleteById(@PathVariable Long id) {
+        mySongService.deleteSongById(id);
+    }
+
 }

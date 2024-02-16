@@ -10,6 +10,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -105,6 +106,32 @@ public class MySongRepositoryTest {
         assertThat(findOneSong.getTitle()).isEqualTo(title2);
         assertThat(findOneSong.getAuthor()).isEqualTo(author2);
         assertThat(findOneSong.getGenre()).isEqualTo(genre2);
+    }
+
+    @Test
+    public void 나의_노래리스트에서_삭제() {
+        //given
+        String title = "Love 119";
+        String genre = "k-pop";
+        String author = "라이즈";
+        mySongRepository.insertSong(MySong.builder().title(title).genre(genre).author(author).build());
+
+        String title2 = "drama";
+        String genre2 = "k-pop";
+        String author2 = "에스파";
+        mySongRepository.insertSong(MySong.builder().title(title2).genre(genre2).author(author2).build());
+        //when
+        List<MySong> findSongList = mySongRepository.findByTitle(title2);
+        Long findSongId = findSongList.get(0).getId();
+
+        mySongRepository.deleteSongById(findSongId);
+
+        Optional<MySong> deletedSong = mySongRepository.findById(findSongId);
+        Boolean isDeleted = deletedSong.isEmpty();
+
+        //then
+        assertThat(isDeleted).isEqualTo(true);
+
     }
 
 
