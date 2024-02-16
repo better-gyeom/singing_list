@@ -32,4 +32,9 @@ public class MySongApiController {
         return mySongService.findByTitle(title);
     }
 
+    @DeleteMapping("/api/mysong-list/delete/{id}")
+    public void deleteById(@PathVariable Long id) {
+        mySongService.deleteSongById(id);
+    }
+
 }

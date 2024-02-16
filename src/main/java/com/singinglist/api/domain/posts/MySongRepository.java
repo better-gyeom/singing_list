@@ -70,6 +70,9 @@ public class MySongRepository {
         return result.stream().findAny(); //List 형태의 result를 Optional 형태로 변환하여 반환
     }
 
+    public void deleteSongById(Long id) {
+        jdbcTemplate.update("delete from my_song where id = ?", id);
+    }
 
     public void deleteAll() {
         jdbcTemplate.update("delete from my_song");

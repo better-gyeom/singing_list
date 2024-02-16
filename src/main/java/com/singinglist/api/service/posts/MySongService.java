@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -43,6 +44,10 @@ public class MySongService {
             songByTitle.add(new MySongResponseDto(song));
         }
         return songByTitle;
+    }
+
+    public void deleteSongById(Long id) {
+        mySongRepository.deleteSongById(id);
     }
 
 }
