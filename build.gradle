@@ -2,13 +2,14 @@ plugins { //최신 플러그인 작성방법
     id 'java'
     id 'org.springframework.boot' version '3.2.1'
     id 'io.spring.dependency-management' version '1.1.4'
+    id 'io.freefair.lombok' version "8.0.1"
 }
 
 group = 'com.singing-list'
 version = '0.0.1-SNAPSHOT'
 
 java {
-    sourceCompatibility = '21'
+    sourceCompatibility = '17'
 }
 
 repositories {
@@ -20,9 +21,11 @@ dependencies { //프로젝트 개발에 필요한 의존성들을 선언하는 �
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
     // lombok
-    implementation 'org.projectlombok:lombok'
-    annotationProcessor 'org.project lombok:lombok'
-    testImplementation 'org.projectlombok:lombok'
+//    implementation 'org.projectlombok:lombok'
+//    compileOnly 'org.projectlombok:lombok'
+//    annotationProcessor 'org.project lombok:lombok'
+//    testImplementation 'org.projectlombok:lombok'
+    testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
 
 //    implementation 'mysql:mysql-connector-java'
@@ -37,3 +40,5 @@ dependencies { //프로젝트 개발에 필요한 의존성들을 선언하는 �
 test { //Junit5를 사용하기 위한 설정
     useJUnitPlatform()
 }
+
+
