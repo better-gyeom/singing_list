@@ -61,9 +61,9 @@ jobs:
 
       # Deploy
       - name: Deploy
-        run: aws deploy create-deployment \
-          --application-name singingList \
-          --deployment-group-name singing-list-group \
-          --file-exists-behavior OVERWRITE \
-          --s3-location bucket=singing-list-deploy,bundleType=zip,key=singingList.zip \
+        run: aws deploy create-deployment
+          --application-name singingList
+          --deployment-group-name singing-list-group
+          --file-exists-behavior OVERWRITE
+          --s3-location bucket=singing-list-deploy,bundleType=zip,key=singingList.zip
           --region ap-northeast-2
